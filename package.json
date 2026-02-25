@@ -1,0 +1,43 @@
+{
+  "name": "@joltsms/mcp-server",
+  "version": "1.0.1",
+  "mcpName": "io.github.rchanllc/joltsms-sms",
+  "description": "MCP server for JoltSMS — provision real-SIM phone numbers and receive OTP codes",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rchanllc/joltsms-mcp-server.git"
+  },
+  "homepage": "https://joltsms.com/developers/mcp",
+  "keywords": [
+    "mcp",
+    "sms",
+    "otp",
+    "phone-number",
+    "verification",
+    "model-context-protocol",
+    "joltsms",
+    "ai-agent"
+  ],
+  "bin": {
+    "mcp-server": "./dist/server.js",
+    "joltsms-mcp": "./dist/server.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "tsx src/server.ts",
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.7",
+    "tsx": "^4.19.4"
+  }
+}
