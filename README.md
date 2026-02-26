@@ -4,6 +4,10 @@ MCP server for [JoltSMS](https://joltsms.com) — provision dedicated real-SIM U
 
 Built on the [Model Context Protocol](https://modelcontextprotocol.io), this server gives AI agents (Claude Code, Claude Desktop, Cursor, etc.) the ability to rent phone numbers, wait for incoming SMS, extract OTP codes, and manage billing — all through standardized tool calls.
 
+<a href="https://glama.ai/mcp/servers/@rchanllc/joltsms-mcp-server">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@rchanllc/joltsms-mcp-server/badge" alt="joltsms-mcp-server MCP server" />
+</a>
+
 ## Quick Start
 
 ### 1. Get an API Key
