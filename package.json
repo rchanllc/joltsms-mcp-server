@@ -1,6 +1,6 @@
 {
   "name": "@joltsms/mcp-server",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "mcpName": "io.github.rchanllc/joltsms-sms",
   "description": "MCP server for JoltSMS — provision real-SIM phone numbers and receive OTP codes",
   "type": "module",
