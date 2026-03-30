@@ -4,6 +4,10 @@ MCP server for [JoltSMS](https://joltsms.com) — provision dedicated real-SIM U
 
 Built on the [Model Context Protocol](https://modelcontextprotocol.io), this server gives AI agents (Claude Code, Claude Desktop, Cursor, etc.) the ability to rent phone numbers, wait for incoming SMS, extract OTP codes, and manage billing — all through standardized tool calls.
 
+## Hosted deployment
+
+A hosted deployment is available on [Fronteir AI](https://fronteir.ai/mcp/rchanllc-joltsms-mcp-server).
+
 ## Quick Start
 
 ### 1. Get an API Key
