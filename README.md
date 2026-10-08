@@ -81,7 +81,7 @@ The most common use case — automated phone verification:
 
 ## Requirements
 
-- Node.js 18+
+- Node.js 22+
 - A JoltSMS account with a payment method on file
 - Your first number must be ordered through the [Dashboard](https://app.joltsms.com) to complete initial 3D Secure verification
 

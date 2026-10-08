@@ -1,6 +1,9 @@
 {
   "name": "@joltsms/mcp-server",
   "version": "1.0.2",
+  "engines": {
+    "node": ">=22"
+  },
   "mcpName": "io.github.rchanllc/joltsms-sms",
   "description": "MCP server for JoltSMS — provision real-SIM phone numbers and receive OTP codes",
   "type": "module",
@@ -30,14 +33,17 @@
   "scripts": {
     "start": "tsx src/server.ts",
     "build": "tsc",
+    "test": "npm run build && node --test test/*.test.mjs",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.12.1",
-    "zod": "^3.24.2"
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@types/node": "^22.20.5",
     "dotenv": "^16.4.7",
-    "tsx": "^4.19.4"
+    "tsx": "^4.19.4",
+    "typescript": "^5.9.3"
   }
 }
