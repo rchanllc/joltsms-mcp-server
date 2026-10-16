@@ -1,0 +1,29 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.rchanllc/joltsms-sms",
+  "description": "Provision real-SIM US phone numbers, receive SMS, and extract OTP codes for AI agents.",
+  "repository": {
+    "url": "https://github.com/rchanllc/joltsms-mcp-server",
+    "source": "github"
+  },
+  "version": "2.0.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@joltsms/mcp-server",
+      "version": "2.0.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "description": "Your JoltSMS API key (jolt_sk_*). Create one at https://app.joltsms.com/settings",
+          "isRequired": true,
+          "format": "string",
+          "isSecret": true,
+          "name": "JOLTSMS_API_KEY"
+        }
+      ]
+    }
+  ]
+}

@@ -19,7 +19,7 @@ Add to your `.mcp.json` (Claude Code) or MCP settings (Claude Desktop, Cursor):
   "mcpServers": {
     "joltsms": {
       "command": "npx",
-      "args": ["-y", "@joltsms/mcp-server"],
+      "args": ["-y", "@joltsms/mcp-server@2"],
       "env": {
         "JOLTSMS_API_KEY": "jolt_sk_your_key_here"
       }
@@ -30,9 +30,9 @@ Add to your `.mcp.json` (Claude Code) or MCP settings (Claude Desktop, Cursor):
 
 ### 3. Use It
 
-Your AI agent now has access to all JoltSMS tools. Try:
+Your AI agent now has access to all 12 JoltSMS tools. Try:
 
-> "Provision a new phone number with area code 650 and wait for an OTP"
+> "List my saved cards, then rent the next available number using the card I choose."
 
 ## Tools
 
@@ -41,35 +41,40 @@ Your AI agent now has access to all JoltSMS tools. Try:
 | `joltsms_list_numbers` | List active numbers with service labels, tags, and unread counts |
 | `joltsms_get_number` | Full details for a single number |
 | `joltsms_update_number` | Set service label, tags, or notes on a number |
-| `joltsms_provision_number` | Rent a new dedicated real-SIM US number ($50/mo) |
-| `joltsms_release_number` | Cancel/release a number at end of billing period |
-| `joltsms_list_messages` | List recent SMS with parsed OTP codes |
+| `joltsms_list_payment_methods` | List masked saved cards and payment method IDs |
+| `joltsms_provision_number` | Rent the next available number, optionally using a selected saved card ($50/mo) |
+| `joltsms_release_number` | End auto-renew at period end, or cancel an unpaid initial checkout |
+| `joltsms_list_messages` | List recent SMS with parsed OTP codes and message IDs |
+| `joltsms_reply_to_sms` | Reply to an eligible inbound message (up to 15 characters) |
 | `joltsms_mark_read` | Mark single or bulk messages as read |
 | `joltsms_wait_for_sms` | Poll until an SMS arrives (key tool for OTP flows) |
 | `joltsms_get_latest_otp` | Get the most recent parsed verification code |
-| `joltsms_billing_status` | Check all subscriptions with billing health |
+| `joltsms_billing_status` | Check up to 10 subscriptions with billing health |
 
 ## OTP Verification Workflow
 
 The most common use case — automated phone verification:
 
 ```
-1. joltsms_provision_number({ area_code: "650" })
-   → Number provisioning started! Phone: +16505551234
+1. joltsms_provision_number({ payment_method_id: "pm_chosen_from_saved_cards" })
+   → Number provisioning started! Use joltsms_list_numbers to check when it is ACTIVE.
 
-2. joltsms_update_number({ number_id: "+16505551234", service_name: "PayPal" })
+2. joltsms_list_numbers({})
+   → Once provisioning completes: +16505551234 (ACTIVE)
+
+3. joltsms_update_number({ number_id: "+16505551234", service_name: "PayPal" })
    → Tagged for easy lookup later
 
-3. [Agent enters phone number on PayPal and requests OTP]
+4. [Agent enters phone number on PayPal and requests OTP]
 
-4. joltsms_wait_for_sms({ number_id: "+16505551234", timeout_seconds: 120 })
+5. joltsms_wait_for_sms({ number_id: "+16505551234", timeout_seconds: 120 })
    → SMS received after 8.2s: "Your PayPal code is 847291"
    → OTP Code: 847291
 
-5. joltsms_mark_read({ number_id: "+16505551234" })
+6. joltsms_mark_read({ number_id: "+16505551234" })
    → Inbox clean
 
-6. [Agent enters 847291 on PayPal — verification complete]
+7. [Agent enters 847291 on PayPal — verification complete]
 ```
 
 ## Environment Variables
@@ -81,9 +86,48 @@ The most common use case — automated phone verification:
 
 ## Requirements
 
-- Node.js 18+
+- Node.js 22+
 - A JoltSMS account with a payment method on file
-- Your first number must be ordered through the [Dashboard](https://app.joltsms.com) to complete initial 3D Secure verification
+- If payment authentication is required, open the hosted invoice URL returned by the tool
+- SMS replies require an API key with the SMS replies capability
+
+## Upgrading from 1.x
+
+Use Node.js 22 or newer, change a pinned MCP configuration to
+`@joltsms/mcp-server@2`, and restart the MCP connection. Your existing JoltSMS API
+key and the `mcp-server` / `joltsms-mcp` executable names still work.
+
+Area codes are not selectable. Remove the old `area_code` argument: rentals use
+the next available dedicated U.S. mobile number. Each provisioning call orders
+one number; grouped checkout remains in the dashboard.
+
+To choose a saved card, call `joltsms_list_payment_methods`, let the user select
+one, and pass its `payment_method_id` to `joltsms_provision_number`. Omitting it
+uses a valid account default or the sole saved card. If authentication is needed,
+the tool returns a hosted invoice URL and a pending subscription ID. An abandoned
+unpaid checkout can be canceled with `joltsms_release_number`; paid rentals retain
+service until the customer billing period ends.
+
+Number details show customer service-through and next-charge/retry dates
+separately. Provider rental expiry is not a customer service end date. The number
+list and billing summary display at most 10 entries; use `joltsms_get_number` to
+look up a specific number on larger accounts, or use the dashboard for the full
+list.
+
+Replies target an existing inbound message ID. They do not accept an arbitrary
+destination or enable outbound campaigns.
+
+## Development
+
+```sh
+npm ci --ignore-scripts
+npm test
+npm run test:package
+npm audit --audit-level=low
+```
+
+See [RELEASING.md](RELEASING.md) for source synchronization, compatibility checks,
+and the separate npm and MCP Registry publication steps.
 
 ## Documentation
 
