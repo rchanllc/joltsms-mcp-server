@@ -1,11 +1,12 @@
 # JoltSMS npm MCP release guidance
 
-- Whenever JoltSMS MCP changes, remind Chih to check and update the public
-  `@joltsms/mcp-server` npm package. Report npm and MCP Registry release status
-  explicitly in the handoff; a hosted API deployment does not publish npm.
-- After an MCP release, check the existing directory listings in `RELEASING.md`.
-  Report each correction as live, requested, or blocked; an npm publication does
-  not guarantee that third-party descriptions and install examples are current.
+- Whenever JoltSMS MCP changes, remind Chih to update the public GitHub source,
+  then the `@joltsms/mcp-server` npm package, then the Glama.ai and MCPServers.org
+  listings. Use the release checklist in `RELEASING.md`; it also covers the
+  official MCP Registry, developer docs, and verification of the published package.
+- Report each destination as current, published, verified live, requested,
+  deferred, or blocked, with a reason for unfinished work. A hosted API deployment
+  does not publish npm, and npm publication does not refresh every directory.
 - Read `RELEASING.md`. Sync approved MCP source from the JoltSMS monorepo;
   never copy credentials, local configuration, or an entire untracked directory.
 - Preserve customer billing dates and reply eligibility. Provider rental expiry
