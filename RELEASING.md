@@ -59,8 +59,45 @@ consumer installs, and npm 12 ignores npm-shrinkwrap.json. See the
 4. Publish this repository's server.json with the official MCP Registry publisher
    after npm is available. Check the registry entry points to the same npm version.
    Follow the [official publishing guide](https://modelcontextprotocol.io/registry/quickstart).
-5. Record source commit, npm version/integrity, MCP Registry status, test results,
-   and any remaining hosted/monorepo sync work. Remind Chih about npm on the next
-   MCP change as well.
+5. Check the directory listings below against the published README and package.
+   Request corrections or refreshes through each site's supported update flow.
+6. Record source commit, npm version/integrity, MCP Registry status, directory
+   update status, test results, and any remaining hosted/monorepo sync work.
+   Remind Chih about npm and directory checks on the next MCP change as well.
 
 No merge in this repository automatically deploys JoltSMS customer services.
+
+## Directory listings
+
+These are known public listings verified on 2026-10-16, not a complete record of
+past submissions. Check the live pages after each release; search snippets can
+lag behind both npm and the page itself.
+
+| Directory | Existing listing | Update route |
+| --- | --- | --- |
+| Glama | [JoltSMS](https://glama.ai/mcp/servers/rchanllc/joltsms-mcp-server) | Imports GitHub updates. Claim the organization-owned server with the root `glama.json` maintainer entry and that maintainer's GitHub login, then use its management controls. |
+| MCPServers.org | [JoltSMS](https://mcpservers.org/servers/rchanllc/joltsms-mcp-server) | Use the existing listing's **Request update** action. Human verification may be required. |
+| AgentSift | [JoltSMS](https://agentsift.ai/capabilities/joltsms) | No existing-listing edit route was visible during the audit. Use a confirmed correction channel; the new-capability submission form is not a confirmed update route. |
+| MCPHub | [JoltSMS](https://www.mcphub.space/servers/rchanllc--joltsms-mcp-server) | Verify the existing listing and follow any supported correction flow if its details are stale. |
+| VerifyMCP | [JoltSMS](https://verifymcp.io/servers/rchanllc-joltsms-sms/joltsms-mcp-server) | Check its detected package version; its scan had already discovered 2.0.0 on 2026-10-16. |
+
+For each listing:
+
+- Check the npm package name, supported Node version, install configuration,
+  required `JOLTSMS_API_KEY`, tool list, and links against the released README.
+  Version 2 uses `@joltsms/mcp-server@2`, Node 22+, and 12 tools. Do not copy the
+  incorrect `@modelcontextprotocol/server-joltsms` name found on AgentSift.
+- Preserve product limits in descriptions: next-available numbers, one number per
+  MCP provisioning call, and replies to eligible existing inbound messages.
+  Area-code selection and arbitrary outbound messaging are unsupported.
+- Prefer refreshing or correcting an existing listing. Do not submit duplicates
+  or assume that a new-listing form also edits existing records.
+- Record the checked time, requested change, and confirmation or request ID.
+  Report **live** only after the public page shows the correction; keep **requested**
+  and **blocked** separate. A submitted refresh is not a verified update.
+- Leave site sign-in and human-verification challenges to the account owner.
+  Never commit API keys, registry tokens, browser credentials, or session state.
+
+`glama.json` authorizes the listed GitHub maintainer to manage the Glama entry.
+Keep it limited to the intended owner; it does not change npm or GitHub repository
+permissions. See [Glama's maintainer schema](https://glama.ai/mcp/schemas/server.json).
