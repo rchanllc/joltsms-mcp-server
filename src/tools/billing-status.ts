@@ -41,10 +41,16 @@ export async function billingStatus(
     const autoRenew = s.cancelAtPeriodEnd ? 'off' : 'on';
 
     const periodDate = s.cancelAtPeriodEnd
-      ? `cancels: ${s.currentPeriodEnd.split('T')[0]}`
-      : `renews: ${s.currentPeriodEnd.split('T')[0]}`;
+      ? `service ends: ${s.currentPeriodEnd.split('T')[0]}`
+      : s.nextChargeDate
+        ? `${s.billingHealth === 'payment_failing' ? 'next retry' : 'next charge'}: ${s.nextChargeDate.split('T')[0]}`
+        : 'next charge: not scheduled';
+    const entitlementDate = s.cancelAtPeriodEnd
+      ? ''
+      : ` | service through: ${s.currentPeriodEnd.split('T')[0]}`;
 
-    return `${i + 1}. ${label} | ${s.billingHealth} | ${price}/mo | ${periodDate} | auto-renew: ${autoRenew}`;
+    const smsService = s.isServiceAllowed ? 'active' : s.deliveryState;
+    return `${i + 1}. ${label} | payment: ${s.billingHealth} | SMS: ${smsService} | ${price}/mo | ${periodDate}${entitlementDate} | auto-renew: ${autoRenew}`;
   });
 
   const header = `${total} subscription(s):\n`;

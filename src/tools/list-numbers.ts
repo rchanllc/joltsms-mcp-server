@@ -23,7 +23,12 @@ export async function listNumbers(client: JoltSMSClient, params: { limit?: numbe
     const unreadLabel = n.unreadCount > 0 ? ` (${n.unreadCount} unread)` : '';
     parts.push(`messages: ${n.messageCount}${unreadLabel}`);
 
-    if (n.expiresAt) parts.push(`expires: ${n.expiresAt.split('T')[0]}`);
+    if (n.cancelAtPeriodEnd && n.customerEntitlementEndsAt) {
+      parts.push(`service ends: ${n.customerEntitlementEndsAt.split('T')[0]}`);
+    } else if (n.nextChargeDate) {
+      const chargeLabel = n.billingHealth === 'payment_failing' ? 'next retry' : 'next charge';
+      parts.push(`${chargeLabel}: ${n.nextChargeDate.split('T')[0]}`);
+    }
     if (n.subscriptionId) parts.push(`sub: ${n.subscriptionId}`);
     return `- ${parts.join(' | ')}`;
   });

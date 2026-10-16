@@ -3,3 +3,8 @@ dist/
 *.tgz
 .env
 .env.local
+.mcpregistry_*
+.npmrc
+!.gstack/
+.gstack/*
+!.gstack/pregate.json

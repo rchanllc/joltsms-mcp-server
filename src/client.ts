@@ -3,8 +3,12 @@ import type {
   JoltMessage,
   ListResponse,
   RentResponse,
+  PaymentMethodsResponse,
+  ReplyToMessageResponse,
   SubscriptionDetail,
 } from './types.js';
+
+export const MCP_REQUEST_TIMEOUT_MS = 40_000;
 
 /**
  * Normalize a US phone number to E.164 format (+1XXXXXXXXXX).
@@ -51,7 +55,7 @@ export class JoltSMSClient {
     }
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30_000);
+    const timeout = setTimeout(() => controller.abort(), MCP_REQUEST_TIMEOUT_MS);
 
     let response: Response;
     try {
@@ -63,7 +67,7 @@ export class JoltSMSClient {
       });
     } catch (err) {
       if (err instanceof Error && err.name === 'AbortError') {
-        throw new Error('Request timed out after 30 seconds');
+        throw new Error(`Request timed out after ${MCP_REQUEST_TIMEOUT_MS / 1_000} seconds`);
       }
       throw err;
     } finally {
@@ -131,13 +135,23 @@ export class JoltSMSClient {
   async rentNumber(options: {
     areaCode?: string;
     preferredAreaCode?: boolean;
+    paymentMethodId?: string;
     idempotencyKey: string;
   }): Promise<RentResponse> {
+    const legacyAreaCodeFields = options.areaCode !== undefined || options.preferredAreaCode !== undefined
+      ? {
+          areaCode: options.areaCode,
+          preferredAreaCode: options.preferredAreaCode ?? !!options.areaCode,
+        }
+      : {};
+
     return this.request('POST', '/numbers/rent', {
       body: {
-        areaCode: options.areaCode,
-        preferredAreaCode: options.preferredAreaCode ?? !!options.areaCode,
+        ...legacyAreaCodeFields,
         autoRenew: true,
+        ...(options.paymentMethodId
+          ? { paymentMethodId: options.paymentMethodId }
+          : {}),
       },
       headers: {
         'X-Idempotency-Key': options.idempotencyKey,
@@ -145,7 +159,22 @@ export class JoltSMSClient {
     });
   }
 
-  async cancelNumber(subscriptionId: string): Promise<{ success: boolean; message: string }> {
+  async listPaymentMethods(options: {
+    limit?: number;
+    cursor?: string;
+  } = {}): Promise<PaymentMethodsResponse> {
+    const params: Record<string, string> = {};
+    if (options.limit !== undefined) params.limit = String(options.limit);
+    if (options.cursor) params.startingAfter = options.cursor;
+    return this.request('GET', '/billing/payment-methods', { params });
+  }
+
+  async cancelNumber(subscriptionId: string): Promise<{
+    success: boolean;
+    message?: string;
+    cancellationMode?: 'immediate' | 'period_end';
+    unpaidCheckoutCancelled?: boolean;
+  }> {
     return this.request('POST', `/billing/subscriptions/${subscriptionId}/auto-renew`, {
       body: { enabled: false },
     });
@@ -174,5 +203,18 @@ export class JoltSMSClient {
     const params: Record<string, string> = {};
     if (numberId) params.numberId = numberId;
     return this.request('PUT', '/messages/mark-all-read', { params });
+  }
+
+  async replyToMessage(
+    messageId: string,
+    content: string,
+    idempotencyKey: string
+  ): Promise<ReplyToMessageResponse> {
+    return this.request('POST', `/messages/${messageId}/reply`, {
+      body: { content },
+      headers: {
+        'X-Idempotency-Key': idempotencyKey,
+      },
+    });
   }
 }

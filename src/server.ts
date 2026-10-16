@@ -9,14 +9,17 @@
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { readFileSync } from 'node:fs';
 import { JoltSMSClient } from './client.js';
 
 import { listNumbersSchema, listNumbers } from './tools/list-numbers.js';
 import { getNumberSchema, getNumber } from './tools/get-number.js';
 import { updateNumberSchema, updateNumber } from './tools/update-number.js';
+import { listPaymentMethodsSchema, listPaymentMethods } from './tools/list-payment-methods.js';
 import { provisionNumberSchema, provisionNumber } from './tools/provision-number.js';
 import { releaseNumberSchema, releaseNumber } from './tools/release-number.js';
 import { listMessagesSchema, listMessages } from './tools/list-messages.js';
+import { replyToSmsSchema, replyToSms } from './tools/reply-to-sms.js';
 import { markReadSchemaShape, markRead } from './tools/mark-read.js';
 import { waitForSmsSchema, waitForSms } from './tools/wait-for-sms.js';
 import { getLatestOtpSchema, getLatestOtp } from './tools/get-latest-otp.js';
@@ -38,7 +41,7 @@ const client = new JoltSMSClient(
 // --- MCP Server ---
 const server = new McpServer({
   name: 'joltsms',
-  version: '1.0.0',
+  version: JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')).version,
 });
 
 // Helper to wrap tool handlers
@@ -92,13 +95,22 @@ Examples:
 );
 
 server.tool(
-  'joltsms_provision_number',
-  `Rent a new dedicated real-SIM US phone number ($50/month).
+  'joltsms_list_payment_methods',
+  `List masked saved cards so the user can choose which card funds a number rental.
 
-IMPORTANT: The user must have a payment method set up in the JoltSMS dashboard first.
+Returns card brand, last four digits, expiration, default status, and a payment_method_id. Never returns full card numbers or CVC.`,
+  listPaymentMethodsSchema,
+  wrapTool((params: { limit?: number; cursor?: string }) => listPaymentMethods(client, params))
+);
+
+server.tool(
+  'joltsms_provision_number',
+  `Rent the next available dedicated real-SIM US phone number ($50/month).
+
+Optionally pass payment_method_id from joltsms_list_payment_methods. Omit it to use the valid account default or the sole saved card.
 
 Provisioning is async — the number may take seconds to minutes to become ACTIVE.
-For specific area codes, provide the 3-digit code (e.g. "212" for New York).
+Specific area codes are not currently selectable.
 
 If 3DS authentication is required, this tool returns a URL the user must visit to authorize payment.`,
   provisionNumberSchema,
@@ -107,10 +119,10 @@ If 3DS authentication is required, this tool returns a URL the user must visit t
 
 server.tool(
   'joltsms_release_number',
-  `Cancel/release a phone number. The number stays active until the end of the current billing period.
+  `Cancel/release a rental. Paid numbers stay active until the end of the current billing period; abandoned unpaid initial checkouts are canceled immediately.
 
-Requires the subscription ID (from joltsms_list_numbers output).
-This disables auto-renewal — the number will be released when the period ends.`,
+Requires the subscription ID from joltsms_list_numbers, or the pending subscription ID returned for an unpaid 3DS checkout.
+Paid rentals disable auto-renewal and release at period end; unpaid initial checkouts end immediately.`,
   releaseNumberSchema,
   wrapTool((params: any) => releaseNumber(client, params))
 );
@@ -124,6 +136,16 @@ Use number_id to filter to a specific number, or omit for all numbers.
 Use from_filter for exact-match sender filtering.`,
   listMessagesSchema,
   wrapTool((params: any) => listMessages(client, params))
+);
+
+server.tool(
+  'joltsms_reply_to_sms',
+  `Reply to an existing inbound SMS by message ID.
+
+The recipient is resolved server-side from the original inbound message. This tool cannot send to an arbitrary phone number and does not accept a destination field.
+Requires an API key created with the SMS replies capability.`,
+  replyToSmsSchema,
+  wrapTool((params: any) => replyToSms(client, params))
 );
 
 server.tool(

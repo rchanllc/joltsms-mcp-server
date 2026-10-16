@@ -1,0 +1,19 @@
+{
+  "runner": "npm run test:gate -- {files}",
+  "strays": {
+    "allow": ["server.json", "AGENTS.md", "RELEASING.md", ".github/**", "test/**", ".gstack/pregate.json"]
+  },
+  "dependencies": {
+    "src/**": ["test/server.test.mjs", "test/payment-method-selection.test.mjs", "test/billing-presentation.test.mjs"],
+    "test/helpers/**": ["test/server.test.mjs", "test/distribution/package-install.test.mjs"],
+    "package.json": ["test/server.test.mjs", "test/distribution/package-install.test.mjs"],
+    "package-lock.json": ["test/server.test.mjs", "test/distribution/package-install.test.mjs"],
+    "server.json": ["test/distribution/package-install.test.mjs"],
+    ".github/**": ["test/server.test.mjs", "test/distribution/package-install.test.mjs"],
+    ".gstack/pregate.json": ["test/server.test.mjs", "test/distribution/package-install.test.mjs"],
+    ".gitignore": ["test/distribution/package-install.test.mjs"],
+    "Dockerfile": ["test/server.test.mjs"],
+    "*.md": [],
+    "LICENSE": []
+  }
+}

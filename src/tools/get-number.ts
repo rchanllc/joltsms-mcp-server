@@ -29,8 +29,14 @@ export async function getNumber(
       const unreadLabel = match.unreadCount > 0 ? ` (${match.unreadCount} unread)` : '';
       lines.push(`  Messages: ${match.messageCount}${unreadLabel}`);
 
-      if (match.rentedAt) lines.push(`  Rented: ${match.rentedAt.split('T')[0]}`);
-      if (match.expiresAt) lines.push(`  Expires: ${match.expiresAt.split('T')[0]}`);
+      if (match.assignedAt) lines.push(`  Assigned: ${match.assignedAt.split('T')[0]}`);
+      if (match.customerEntitlementEndsAt) {
+        lines.push(`  Service through: ${match.customerEntitlementEndsAt.split('T')[0]}`);
+      }
+      if (match.nextChargeDate && !match.cancelAtPeriodEnd) {
+        const chargeLabel = match.billingHealth === 'payment_failing' ? 'Next retry' : 'Next charge';
+        lines.push(`  ${chargeLabel}: ${match.nextChargeDate.split('T')[0]}`);
+      }
       if (match.subscriptionId) lines.push(`  Subscription: ${match.subscriptionId}`);
 
       const autoRenew = match.autoRenewEnabled !== undefined

@@ -40,6 +40,7 @@ export async function listMessages(
       `Body: ${m.body.slice(0, 200)}${m.body.length > 200 ? '...' : ''}`,
       m.parsedCode ? `OTP Code: ${m.parsedCode}` : null,
       `Received: ${m.receivedAt}`,
+      `Message ID: ${m.id}`,
     ].filter(Boolean);
     return parts.join('\n  ');
   });
