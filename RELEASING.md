@@ -4,9 +4,43 @@ Every MCP update needs an explicit npm status in the handoff to Chih: published,
 ready for approval, or deferred with a reason. Deploying the hosted MCP endpoint
 does not update `@joltsms/mcp-server` on npm.
 
+## Checklist for every MCP update
+
+Chih's standing reminder is to update the public GitHub source first, npm second,
+and the Glama.ai and MCPServers.org listings afterward. Track the official
+registry, developer docs, and release verification alongside those destinations:
+
+- [ ] **Public GitHub repository:** synchronize approved source into
+  [rchanllc/joltsms-mcp-server](https://github.com/rchanllc/joltsms-mcp-server).
+  Keep the README, tool descriptions, install examples, Node requirement, and
+  package/registry version metadata consistent. Compare both repositories before
+  copying files so fixes made in the public repository are preserved.
+- [ ] **npm:** run the package checks below, publish the approved version of
+  `@joltsms/mcp-server`, and verify the version and integrity from npm. For changes
+  that do not affect the package, explicitly record why no new npm release is needed.
+- [ ] **Official MCP Registry:** publish the matching `server.json` after npm is
+  available, then verify the active/latest registry version and npm reference.
+- [ ] **Developer docs:** check [joltsms.com/developers/mcp](https://joltsms.com/developers/mcp)
+  against the release for tools, Node requirements, installation, authentication,
+  examples, and migration notes. Update affected API docs when their contract changes.
+- [ ] **Glama.ai and MCPServers.org:** refresh the existing entries and verify the
+  public results. Check Glama's synced commit and use MCPServers.org's Request update
+  action when its README is stale. A queued request remains pending until the page
+  shows the new content.
+- [ ] **Published-package verification and handoff:** perform the clean-install
+  smoke described below, including MCP initialization and the expected tool list.
+  Use a stub or an authorized read-only account. Check the hosted endpoint separately
+  when it changed. Report each destination's status, version/commit, and any pending
+  follow-up so a hosted deployment is never mistaken for a completed npm release.
+
+MCPHub and VerifyMCP are secondary verification checks; confirm what their public
+pages actually show before requesting an update. AgentSift is deferred as of
+2026-10-16 after Chih reported repeated submission-processing failures. Revisit it
+when a working correction route is available; it does not block an MCP release.
+
 ## Source and compatibility
 
-The 2.0.0 candidate synchronizes the 12-tool standalone implementation from
+The 2.0.0 release synchronizes the 12-tool standalone implementation from
 `joltsms-v2` commit `354f00fd3b10c729343eb6e59405f0f19faa50cd`, directory
 `tools/mcp-joltsms`. The public server reads its runtime version from its own
 package manifest. It also clears the matching pending rental request after a
@@ -77,7 +111,7 @@ lag behind both npm and the page itself.
 | --- | --- | --- |
 | Glama | [JoltSMS](https://glama.ai/mcp/servers/rchanllc/joltsms-mcp-server) | Imports GitHub updates. Claim the organization-owned server with the root `glama.json` maintainer entry and that maintainer's GitHub login, then use its management controls. |
 | MCPServers.org | [JoltSMS](https://mcpservers.org/servers/rchanllc/joltsms-mcp-server) | Use the existing listing's **Request update** action. Human verification may be required. |
-| AgentSift | [JoltSMS](https://agentsift.ai/capabilities/joltsms) | No existing-listing edit route was visible during the audit. Use a confirmed correction channel; the new-capability submission form is not a confirmed update route. |
+| AgentSift | [JoltSMS](https://agentsift.ai/capabilities/joltsms) | Deferred after owner-reported submission failures on 2026-10-16. No confirmed existing-listing edit route was found; revisit when a working correction channel is available. |
 | MCPHub | [JoltSMS](https://www.mcphub.space/servers/rchanllc--joltsms-mcp-server) | Verify the existing listing and follow any supported correction flow if its details are stale. |
 | VerifyMCP | [JoltSMS](https://verifymcp.io/servers/rchanllc-joltsms-sms/joltsms-mcp-server) | Check its detected package version; its scan had already discovered 2.0.0 on 2026-10-16. |
 
