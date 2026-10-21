@@ -11,6 +11,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { readFileSync } from 'node:fs';
 import { JoltSMSClient } from './client.js';
+import { assertSupportedNode } from './runtime.js';
 
 import { listNumbersSchema, listNumbers } from './tools/list-numbers.js';
 import { getNumberSchema, getNumber } from './tools/get-number.js';
@@ -24,6 +25,14 @@ import { markReadSchemaShape, markRead } from './tools/mark-read.js';
 import { waitForSmsSchema, waitForSms } from './tools/wait-for-sms.js';
 import { getLatestOtpSchema, getLatestOtp } from './tools/get-latest-otp.js';
 import { billingStatusSchema, billingStatus } from './tools/billing-status.js';
+
+// Validate the runtime before accepting MCP requests or creating an API client.
+try {
+  assertSupportedNode();
+} catch (error) {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exit(1);
+}
 
 // --- Validate env ---
 const { JOLTSMS_API_KEY, JOLTSMS_API_URL } = process.env;
