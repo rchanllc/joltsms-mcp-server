@@ -47,7 +47,7 @@ test('published tarball installs a locked runtime and both executable names work
       await checkProtocol({ command: join(directory, 'node_modules/.bin', name), version: manifest.version });
     }
     const installed = JSON.parse(readFileSync(join(packageRoot, 'package.json'), 'utf8'));
-    assert.equal(installed.engines.node, '>=22');
+    assert.equal(installed.engines.node, manifest.engines.node);
     npm(['audit', '--omit=dev', '--audit-level=low', '--registry=https://registry.npmjs.org'], directory);
   } finally {
     rmSync(directory, { recursive: true, force: true });

@@ -52,7 +52,11 @@ For future changes, compare approved source in both repositories before copying
 tracked files. Never copy an entire local directory: it can contain API keys or
 MCP Registry login tokens. The hosted MCP API has separate transport/auth code.
 
-Version 2 requires Node 22+ and no longer advertises selectable area codes.
+Version 2.0.1 requires Node 22.23.4+ within 22.x, 24.22.1+ within 24.x, or
+26.12.1+ within 26.x, and enforces this at startup. Both Docker stages pin
+22.23.4-slim. Keep the runtime guard, engine ranges, CI matrix and README aligned
+when a future Node security release changes these minimums.
+Version 2 no longer advertises selectable area codes.
 The API key, executable names, and stdio transport are unchanged. See README for
 the customer migration. Update package.json with `npm version --no-git-tag-version`
 and update both versions in server.json; the package test rejects metadata drift.
@@ -67,8 +71,8 @@ npm audit --audit-level=low
 docker build -t joltsms-mcp-check .
 ```
 
-CI repeats the source and packed-install tests on Node 22, 24, and 26. JoltSMS
-protocol checks use a loopback API stub with a dummy key, including SMS replies
+CI repeats the source and packed-install tests on Node 22.23.4, 24.22.1, and
+26.12.1. JoltSMS protocol checks use a loopback API stub with a dummy key, including SMS replies
 and billing. They do not make purchases or send real messages. Package installation
 and npm audit contact the npm registry.
 
@@ -119,8 +123,9 @@ For each listing:
 
 - Check the npm package name, supported Node version, install configuration,
   required `JOLTSMS_API_KEY`, tool list, and links against the released README.
-  Version 2 uses `@joltsms/mcp-server@2`, Node 22+, and 12 tools. Do not copy the
-  incorrect `@modelcontextprotocol/server-joltsms` name found on AgentSift.
+  Version 2 uses `@joltsms/mcp-server@2`, the patched Node releases above, and
+  12 tools. Do not copy the incorrect `@modelcontextprotocol/server-joltsms` name
+  found on AgentSift.
 - Preserve product limits in descriptions: next-available numbers, one number per
   MCP provisioning call, and replies to eligible existing inbound messages.
   Area-code selection and arbitrary outbound messaging are unsupported.

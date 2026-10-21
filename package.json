@@ -1,8 +1,8 @@
 {
   "name": "@joltsms/mcp-server",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "engines": {
-    "node": ">=22"
+    "node": ">=22.23.4 <23 || >=24.22.1 <25 || >=26.12.1 <27"
   },
   "mcpName": "io.github.rchanllc/joltsms-sms",
   "description": "MCP server for JoltSMS — provision real-SIM phone numbers and receive OTP codes",
