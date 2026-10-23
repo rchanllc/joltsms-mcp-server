@@ -5,7 +5,7 @@ export const markReadSchema = z.object({
   message_id: z.string().uuid().optional()
     .describe('Mark a single message as read by its UUID'),
   number_id: z.string().optional()
-    .describe('Mark ALL messages on this number as read. Accepts UUID or phone number (e.g. +17243213654).'),
+    .describe('Mark ALL messages on this number as read. Accepts UUID or phone number (e.g. +17245550100).'),
 }).refine(
   (data) => (data.message_id && !data.number_id) || (!data.message_id && data.number_id),
   { message: 'Provide exactly one of message_id or number_id, not both or neither' }

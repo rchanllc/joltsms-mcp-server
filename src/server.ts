@@ -91,7 +91,7 @@ server.tool(
   'joltsms_get_number',
   `Get full details for a single phone number, including service label, tags, notes, message counts, billing dates, and subscription status.
 
-Accepts a UUID or phone number (e.g. "+16505551234", "650-555-1234", "(650) 555-1234").`,
+Accepts a UUID or phone number (e.g. "+17245550100", "724-555-0100", "(724) 555-0100").`,
   getNumberSchema,
   {
     title: 'Get number',
@@ -111,8 +111,8 @@ Only provided fields are updated. Omitted fields remain unchanged.
 Pass an empty array [] to clear tags, or an empty string "" to clear notes.
 
 Examples:
-  update_number("+16505551234", service_name="PayPal", tags=["production"])
-  update_number("+16505551234", notes="Linked to acme@company.com")`,
+  update_number("+17245550100", service_name="PayPal", tags=["production"])
+  update_number("+17245550100", notes="Linked to team@example.com")`,
   updateNumberSchema,
   {
     title: 'Update number metadata',

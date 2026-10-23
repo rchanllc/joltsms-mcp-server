@@ -3,7 +3,7 @@ import type { JoltSMSClient } from '../client.js';
 
 export const getLatestOtpSchema = {
   number_id: z.string()
-    .describe('Number ID (UUID) or phone number (e.g. +17243213654 or 7243213654)'),
+    .describe('Number ID (UUID) or phone number (e.g. +17245550100 or 7245550100)'),
   since: z.string().optional()
     .describe('Only look at messages after this ISO 8601 datetime. Defaults to last 10 minutes.'),
 };

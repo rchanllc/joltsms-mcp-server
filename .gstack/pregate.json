@@ -6,7 +6,7 @@
   "dependencies": {
     "src/**": ["test/server.test.mjs", "test/payment-method-selection.test.mjs", "test/billing-presentation.test.mjs"],
     "test/helpers/**": ["test/server.test.mjs", "test/distribution/package-install.test.mjs"],
-    "package.json": ["test/server.test.mjs", "test/distribution/package-install.test.mjs"],
+    "package.json": ["test/server.test.mjs", "test/distribution/package-install.test.mjs", "test/distribution/publish-metadata.test.mjs"],
     "package-lock.json": ["test/server.test.mjs", "test/distribution/package-install.test.mjs"],
     "server.json": ["test/distribution/package-install.test.mjs"],
     ".github/**": ["test/server.test.mjs", "test/distribution/package-install.test.mjs"],

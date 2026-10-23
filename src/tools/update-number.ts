@@ -3,7 +3,7 @@ import type { JoltSMSClient } from '../client.js';
 
 export const updateNumberSchema = {
   number_id: z.string()
-    .describe('Number ID (UUID) or phone number (e.g. +17243213654 or 7243213654)'),
+    .describe('Number ID (UUID) or phone number (e.g. +17245550100 or 7245550100)'),
   service_name: z.string().min(1).max(100).optional()
     .describe('Service/platform label (e.g. "PayPal", "Discord Backup"). Max 100 chars.'),
   tags: z.array(z.string().min(1).max(50)).max(20).optional()

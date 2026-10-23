@@ -88,13 +88,21 @@ consumer installs, and npm 12 ignores npm-shrinkwrap.json. See the
 ## Publish after merge/release approval
 
 1. Check out the approved commit and repeat the commands above. Pack with
-   `npm pack --json`, inspect the file list, and retain the tarball and integrity.
-2. Publish that exact tested tarball with `npm publish ./joltsms-mcp-server-VERSION.tgz
-   --access public --tag latest`. Authentication or OTP must be supplied through
-   the normal npm login flow, never committed or put in a PR.
+   `npm pack --ignore-scripts --json`, inspect the file list, and retain the tarball
+   and integrity. Keep the checkout and built files unchanged until publication.
+2. From that same checkout, run `npm run release:publish`. This publishes the
+   package directory with lifecycle scripts disabled, using the already tested
+   build. Do not pass a tarball filename to `npm publish`: npm can include its
+   absolute local path in public `_resolved` metadata. The package tests capture
+   a directory publication against a loopback registry and verify that its
+   tarball matches `npm pack` and its metadata contains no local paths.
+   Authentication or OTP must use the normal npm login flow, never a committed
+   file or PR. Do not modify or rebuild files between packing and publishing.
 3. Verify npm's version and integrity using `npm view @joltsms/mcp-server@VERSION
    version dist.integrity --json`. Install it in a clean directory and repeat
    the stdio smoke against a stub or an authorized read-only staging account.
+   Confirm the published integrity matches the retained tarball and check the
+   full registry metadata for `_resolved`, `_from`, and local filesystem paths.
 4. Publish this repository's server.json with the official MCP Registry publisher
    after npm is available. Check the registry entry points to the same npm version.
    Follow the [official publishing guide](https://modelcontextprotocol.io/registry/quickstart).
@@ -105,6 +113,10 @@ consumer installs, and npm 12 ignores npm-shrinkwrap.json. See the
    Remind Chih about npm and directory checks on the next MCP change as well.
 
 No merge in this repository automatically deploys JoltSMS customer services.
+
+Phone numbers in MCP examples must use the reserved fictional 555-0100 through
+555-0199 range. Keep both international and ten-digit examples aligned across
+tool schemas, the monorepo standalone source, and developer documentation.
 
 ## Directory listings
 

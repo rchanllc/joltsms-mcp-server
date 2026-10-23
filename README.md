@@ -87,18 +87,18 @@ The most common use case — automated phone verification:
    → Number provisioning started! Use joltsms_list_numbers to check when it is ACTIVE.
 
 2. joltsms_list_numbers({})
-   → Once provisioning completes: +16505551234 (ACTIVE)
+   → Once provisioning completes: +17245550100 (ACTIVE)
 
-3. joltsms_update_number({ number_id: "+16505551234", service_name: "PayPal" })
+3. joltsms_update_number({ number_id: "+17245550100", service_name: "PayPal" })
    → Tagged for easy lookup later
 
 4. [Agent enters phone number on PayPal and requests OTP]
 
-5. joltsms_wait_for_sms({ number_id: "+16505551234", timeout_seconds: 120 })
+5. joltsms_wait_for_sms({ number_id: "+17245550100", timeout_seconds: 120 })
    → SMS received after 8.2s: "Your PayPal code is 847291"
    → OTP Code: 847291
 
-6. joltsms_mark_read({ number_id: "+16505551234" })
+6. joltsms_mark_read({ number_id: "+17245550100" })
    → Inbox clean
 
 7. [Agent enters 847291 on PayPal — verification complete]

@@ -3,7 +3,7 @@ import type { JoltSMSClient } from '../client.js';
 
 export const waitForSmsSchema = {
   number_id: z.string()
-    .describe('Number ID (UUID) or phone number (e.g. +17243213654 or 7243213654)'),
+    .describe('Number ID (UUID) or phone number (e.g. +17245550100 or 7245550100)'),
   timeout_seconds: z.number().min(10).max(300).default(120).optional()
     .describe('Max seconds to wait (10-300, default 120)'),
   poll_interval_seconds: z.number().min(3).max(30).default(5).optional()
