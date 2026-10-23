@@ -64,6 +64,31 @@ export async function checkProtocol({ command, args = [], version }) {
     await client.connect(transport);
     assert.equal(client.getServerVersion().version, version);
     const { tools } = await client.listTools();
+    // Public discovery contract: clients use these hints before authorizing tool calls.
+    // These expectations are independent of the server's registration objects.
+    const expectedHints = {
+      joltsms_list_numbers: [true, false, true, false],
+      joltsms_get_number: [true, false, true, false],
+      joltsms_update_number: [false, true, true, false],
+      joltsms_list_payment_methods: [true, false, true, false],
+      joltsms_provision_number: [false, true, false, true],
+      joltsms_release_number: [false, true, false, true],
+      joltsms_list_messages: [true, false, true, false],
+      joltsms_reply_to_sms: [false, true, false, true],
+      joltsms_mark_read: [false, false, true, false],
+      joltsms_wait_for_sms: [true, false, true, false],
+      joltsms_get_latest_otp: [true, false, true, false],
+      joltsms_billing_status: [true, false, true, false],
+    };
+    assert.deepEqual(tools.map(({ name }) => name).sort(), Object.keys(expectedHints).sort());
+    assert.equal(requests.length, 0, 'discovery must not call the JoltSMS API');
+    for (const { name, annotations } of tools) {
+      assert.ok(annotations?.title?.trim(), `${name} needs a human-readable title`);
+      assert.deepEqual([
+        annotations.readOnlyHint, annotations.destructiveHint,
+        annotations.idempotentHint, annotations.openWorldHint,
+      ], expectedHints[name], `${name} must declare its actual effects explicitly`);
+    }
     assert.deepEqual(tools.map((tool) => tool.name).sort(), [
       'billing_status', 'get_latest_otp', 'get_number', 'list_messages',
       'list_numbers', 'list_payment_methods', 'mark_read', 'provision_number',

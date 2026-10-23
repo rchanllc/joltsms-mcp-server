@@ -77,6 +77,13 @@ server.tool(
 
 Each number costs $50/month and receives unlimited inbound SMS with parsed OTP codes.`,
   listNumbersSchema,
+  {
+    title: 'List numbers',
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   wrapTool((params: any) => listNumbers(client, params))
 );
 
@@ -86,6 +93,13 @@ server.tool(
 
 Accepts a UUID or phone number (e.g. "+16505551234", "650-555-1234", "(650) 555-1234").`,
   getNumberSchema,
+  {
+    title: 'Get number',
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   wrapTool((params: any) => getNumber(client, params))
 );
 
@@ -100,6 +114,13 @@ Examples:
   update_number("+16505551234", service_name="PayPal", tags=["production"])
   update_number("+16505551234", notes="Linked to acme@company.com")`,
   updateNumberSchema,
+  {
+    title: 'Update number metadata',
+    readOnlyHint: false,
+    destructiveHint: true,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   wrapTool((params: any) => updateNumber(client, params))
 );
 
@@ -109,6 +130,13 @@ server.tool(
 
 Returns card brand, last four digits, expiration, default status, and a payment_method_id. Never returns full card numbers or CVC.`,
   listPaymentMethodsSchema,
+  {
+    title: 'List payment methods',
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   wrapTool((params: { limit?: number; cursor?: string }) => listPaymentMethods(client, params))
 );
 
@@ -123,6 +151,13 @@ Specific area codes are not currently selectable.
 
 If 3DS authentication is required, this tool returns a URL the user must visit to authorize payment.`,
   provisionNumberSchema,
+  {
+    title: 'Rent a number ($50/month)',
+    readOnlyHint: false,
+    destructiveHint: true,
+    idempotentHint: false,
+    openWorldHint: true,
+  },
   wrapTool((params: any) => provisionNumber(client, params))
 );
 
@@ -133,6 +168,13 @@ server.tool(
 Requires the subscription ID from joltsms_list_numbers, or the pending subscription ID returned for an unpaid 3DS checkout.
 Paid rentals disable auto-renewal and release at period end; unpaid initial checkouts end immediately.`,
   releaseNumberSchema,
+  {
+    title: 'Cancel number rental',
+    readOnlyHint: false,
+    destructiveHint: true,
+    idempotentHint: false,
+    openWorldHint: true,
+  },
   wrapTool((params: any) => releaseNumber(client, params))
 );
 
@@ -144,6 +186,13 @@ Returns sender, body, parsed OTP code (if detected), and timestamps.
 Use number_id to filter to a specific number, or omit for all numbers.
 Use from_filter for exact-match sender filtering.`,
   listMessagesSchema,
+  {
+    title: 'List messages',
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   wrapTool((params: any) => listMessages(client, params))
 );
 
@@ -154,6 +203,13 @@ server.tool(
 The recipient is resolved server-side from the original inbound message. This tool cannot send to an arbitrary phone number and does not accept a destination field.
 Requires an API key created with the SMS replies capability.`,
   replyToSmsSchema,
+  {
+    title: 'Reply to SMS',
+    readOnlyHint: false,
+    destructiveHint: true,
+    idempotentHint: false,
+    openWorldHint: true,
+  },
   wrapTool((params: any) => replyToSms(client, params))
 );
 
@@ -166,6 +222,13 @@ server.tool(
 
 Use after extracting an OTP to keep the inbox clean.`,
   markReadSchemaShape,
+  {
+    title: 'Mark messages read',
+    readOnlyHint: false,
+    destructiveHint: false,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   wrapTool((params: any) => markRead(client, params))
 );
 
@@ -182,6 +245,13 @@ Typical workflow:
 Use from_filter to only match messages from a specific sender.
 Default timeout is 120 seconds with 5-second polling intervals.`,
   waitForSmsSchema,
+  {
+    title: 'Wait for SMS',
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   wrapTool((params: any) => waitForSms(client, params))
 );
 
@@ -194,6 +264,13 @@ If no parsed code is found, returns the most recent message body for manual extr
 
 Use joltsms_wait_for_sms if you need to wait for an OTP that hasn't arrived yet.`,
   getLatestOtpSchema,
+  {
+    title: 'Get latest OTP',
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   wrapTool((params: any) => getLatestOtp(client, params))
 );
 
@@ -204,6 +281,13 @@ server.tool(
 Shows each subscription with billing health, price, renewal/cancellation dates, and auto-renew status.
 Cross-references with phone numbers for easy identification.`,
   billingStatusSchema,
+  {
+    title: 'Billing status',
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+    openWorldHint: false,
+  },
   wrapTool((params: any) => billingStatus(client, params))
 );
 

@@ -51,6 +51,33 @@ Your AI agent now has access to all 12 JoltSMS tools. Try:
 | `joltsms_get_latest_otp` | Get the most recent parsed verification code |
 | `joltsms_billing_status` | Check up to 10 subscriptions with billing health |
 
+## Tool annotations (2.0.2)
+
+All 12 tools expose a human-readable `annotations.title` and explicit boolean
+`readOnlyHint`, `destructiveHint`, `idempotentHint`, and `openWorldHint` values
+through `tools/list`.
+
+| Tools | Read only | Destructive | Idempotent | Open world |
+| --- | --- | --- | --- | --- |
+| List numbers, get number, list payment methods, list messages, wait for SMS, get latest OTP, billing status | true | false | true | false |
+| Update number metadata | false | true | true | false |
+| Provision number, release number, reply to SMS | false | true | false | true |
+| Mark messages read | false | false | true | false |
+
+“Destructive” includes overwriting labels/tags/notes, spending money, canceling
+service, and sending an SMS that cannot be recalled. Account reads and read-status
+updates stay within your private JoltSMS account. Rentals, cancellations, and
+replies interact with payment or telecom services outside it.
+
+Provisioning protects a pending attempt, but a new call after success can buy
+another number. Replies use a new request key per call. Cancellation sends a new
+API request on each call and does not promise safe automatic retries.
+These hints help clients present actions accurately; API permissions and user
+approval are still required for authorized actions.
+
+Version 2.0.2 also updates bundled `ip-address` to 10.7.4 for
+[GHSA-rxp7-6hxx-x8q5](https://github.com/advisories/GHSA-rxp7-6hxx-x8q5).
+
 ## OTP Verification Workflow
 
 The most common use case — automated phone verification:
