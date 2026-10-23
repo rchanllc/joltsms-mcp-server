@@ -3,7 +3,7 @@ import type { JoltSMSClient } from '../client.js';
 
 export const listMessagesSchema = {
   number_id: z.string().optional()
-    .describe('Filter by number ID (UUID) or phone number (e.g. +17243213654 or 7243213654). Omit for all numbers.'),
+    .describe('Filter by number ID (UUID) or phone number (e.g. +17245550100 or 7245550100). Omit for all numbers.'),
   since: z.string().optional()
     .describe('ISO 8601 datetime — only return messages after this time. Example: "2025-01-15T00:00:00Z"'),
   limit: z.number().min(1).max(10).default(10).optional()
@@ -11,7 +11,7 @@ export const listMessagesSchema = {
   cursor: z.string().optional()
     .describe('Pagination cursor from previous response'),
   from_filter: z.string().optional()
-    .describe('Filter by sender phone number (exact match, e.g. "+18005551234")'),
+    .describe('Filter by sender phone number (exact match, e.g. "+17245550101")'),
 };
 
 export async function listMessages(
