@@ -78,7 +78,8 @@ and npm audit contact the npm registry.
 
 `bundleDependencies` carries the reviewed SDK/Zod runtime tree from the lockfile
 into the tarball. The install test checks every bundled runtime version, both
-CLI names, all 12 tools, validation, and masked payment methods. Dev tools are
+CLI names, all 12 tools and their titles and four annotation hints, validation,
+and masked payment methods. Dev tools are
 excluded. Keep the root audit clean before packing; bundled dependencies require
 a new package release to update them. Root-only npm overrides would not protect
 consumer installs, and npm 12 ignores npm-shrinkwrap.json. See the
