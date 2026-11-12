@@ -10,6 +10,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { readFileSync } from 'node:fs';
+import { z } from 'zod';
 import { JoltSMSClient } from './client.js';
 import { assertSupportedNode } from './runtime.js';
 
@@ -71,6 +72,18 @@ function wrapTool(fn: (...args: any[]) => Promise<string>) {
 
 // --- Register tools ---
 
+server.tool('joltsms_hide_sender', 'Update personal sender visibility on one number. Alerts remain muted. API keys require sms:preferences:write.',
+    { number_id: z.string().uuid(), sender: z.string().min(1).max(256) },
+    { title: 'Update personal sender visibility', readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    wrapTool(async (params) => JSON.stringify(await client.setSenderPreference({ numberId: params.number_id, sender: params.sender, hidden: true, muted: true }))));
+server.tool('joltsms_show_sender_in_inbox', 'Update personal sender visibility on one number. Alerts remain muted. API keys require sms:preferences:write.',
+    { number_id: z.string().uuid(), sender: z.string().min(1).max(256) },
+    { title: 'Update personal sender visibility', readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    wrapTool(async (params) => JSON.stringify(await client.setSenderPreference({ numberId: params.number_id, sender: params.sender, hidden: false, muted: true }))));
+server.tool('joltsms_list_hidden_senders', 'List your hidden senders. Use list_messages with visibility hidden, number_id and from_filter to read retained messages.',
+    { number_id: z.string().uuid().optional(), cursor: z.string().optional() },
+    { title: 'List hidden senders', readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false },
+    wrapTool(async (params) => JSON.stringify(await client.listHiddenSenders(params.number_id, params.cursor))));
 server.tool(
   'joltsms_list_numbers',
   `List your active JoltSMS phone numbers. Returns phone number, status, service label, tags, message count, and subscription details.
