@@ -113,15 +113,15 @@ The most common use case — automated phone verification:
 
 ## Requirements
 
-- A patched Node.js release: **22.23.4+ within 22.x**, **24.22.1+ within 24.x**,
-  or **26.12.1+ within 26.x**
+- A patched Node.js release: **22.23.5+ within 22.x**, **24.22.3+ within 24.x**,
+  or **26.13.1+ within 26.x**
 - A JoltSMS account with a payment method on file
 - If payment authentication is required, open the hosted invoice URL returned by the tool
 - SMS replies require an API key with the SMS replies capability
 
-## Node.js security update (2.0.1)
+## Node.js security update (2.0.5)
 
-Version 2.0.1 requires the [October 21, 2026 Node.js security patches](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases).
+Version 2.0.5 requires the [November 2026 Node.js security patches](https://nodejs.org/en/blog/vulnerability/november-2026-security-releases).
 It checks the Node runtime at startup and exits with an upgrade message on an
 older patch, unsupported major, or prerelease. npm's engine warning alone does
 not enforce this requirement.
@@ -130,7 +130,7 @@ For `npx` installations, update Node on the machine that launches your MCP clien
 check `node --version` in that environment, then restart the MCP connection.
 Clients can use a different PATH from your terminal; ensure their environment
 selects the patched Node binary too. Installing a new npm package does not
-replace Node itself. The Docker build uses `node:22.23.4-slim` in both stages;
+replace Node itself. The Docker build uses `node:22.23.5-slim` in both stages;
 rebuild and replace existing containers to use the patched runtime.
 
 The API key, executable names, and all 12 tools are unchanged.

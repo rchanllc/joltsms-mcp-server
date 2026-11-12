@@ -52,9 +52,9 @@ For future changes, compare approved source in both repositories before copying
 tracked files. Never copy an entire local directory: it can contain API keys or
 MCP Registry login tokens. The hosted MCP API has separate transport/auth code.
 
-Version 2.0.1 requires Node 22.23.4+ within 22.x, 24.22.1+ within 24.x, or
-26.12.1+ within 26.x, and enforces this at startup. Both Docker stages pin
-22.23.4-slim. Keep the runtime guard, engine ranges, CI matrix and README aligned
+Version 2.0.5 requires Node 22.23.5+ within 22.x, 24.22.3+ within 24.x, or
+26.13.1+ within 26.x, and enforces this at startup. Both Docker stages pin
+22.23.5-slim. Keep the runtime guard, engine ranges, CI matrix and README aligned
 when a future Node security release changes these minimums.
 Version 2 no longer advertises selectable area codes.
 The API key, executable names, and stdio transport are unchanged. See README for
@@ -71,8 +71,8 @@ npm audit --audit-level=low
 docker build -t joltsms-mcp-check .
 ```
 
-CI repeats the source and packed-install tests on Node 22.23.4, 24.22.1, and
-26.12.1. JoltSMS protocol checks use a loopback API stub with a dummy key, including SMS replies
+CI repeats the source and packed-install tests on Node 22.23.5, 24.22.3, and
+26.13.1. JoltSMS protocol checks use a loopback API stub with a dummy key, including SMS replies
 and billing. They do not make purchases or send real messages. Package installation
 and npm audit contact the npm registry.
 
