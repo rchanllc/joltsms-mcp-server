@@ -30,7 +30,7 @@ Add to your `.mcp.json` (Claude Code) or MCP settings (Claude Desktop, Cursor):
 
 ### 3. Use It
 
-Your AI agent now has access to all 12 JoltSMS tools. Try:
+Your AI agent now has access to all 15 JoltSMS tools. Try:
 
 > "List my saved cards, then rent the next available number using the card I choose."
 
@@ -50,19 +50,41 @@ Your AI agent now has access to all 12 JoltSMS tools. Try:
 | `joltsms_wait_for_sms` | Poll until an SMS arrives (key tool for OTP flows) |
 | `joltsms_get_latest_otp` | Get the most recent parsed verification code |
 | `joltsms_billing_status` | Check up to 10 subscriptions with billing health |
+| `joltsms_hide_sender` | Hide one exact sender on one number for your account and mute its alerts |
+| `joltsms_show_sender_in_inbox` | Restore that sender to your inbox, keeping its alerts muted |
+| `joltsms_list_hidden_senders` | List your hidden senders, optionally by number, with cursor pagination |
+
+## Personal sender visibility (2.1.0)
+
+Hiding is personal to your account and number. It keeps messages available and
+does not block SMS delivery or hide messages from other people sharing a number.
+Use the exact sender from a message and the number's UUID for hide/show calls.
+These writes require an API key with `sms:preferences:write` enabled; existing
+keys retain their current permissions.
+
+`joltsms_list_messages`, `joltsms_get_latest_otp`, and `joltsms_wait_for_sms`
+accept optional `visibility: "all" | "inbox" | "hidden"`. Omitting it preserves
+the existing default: all accessible messages, including personally hidden ones.
+Use `"inbox"` to follow the dashboard inbox or `"hidden"` to review retained
+messages. To review one hidden sender, pass its `number_id` and `from_filter`
+to `joltsms_list_messages` with `visibility: "hidden"`.
+
+Restoring with `joltsms_show_sender_in_inbox` keeps notifications muted. It does
+not undo a previous notification preference; use dashboard notification controls
+to enable alerts again after restoring the sender.
 
 ## Tool annotations (2.0.2)
 
-All 12 tools expose a human-readable `annotations.title` and explicit boolean
+All 15 tools expose a human-readable `annotations.title` and explicit boolean
 `readOnlyHint`, `destructiveHint`, `idempotentHint`, and `openWorldHint` values
 through `tools/list`.
 
 | Tools | Read only | Destructive | Idempotent | Open world |
 | --- | --- | --- | --- | --- |
-| List numbers, get number, list payment methods, list messages, wait for SMS, get latest OTP, billing status | true | false | true | false |
+| List numbers, get number, list payment methods, list messages, wait for SMS, get latest OTP, billing status, list hidden senders | true | false | true | false |
 | Update number metadata | false | true | true | false |
 | Provision number, release number, reply to SMS | false | true | false | true |
-| Mark messages read | false | false | true | false |
+| Mark messages read, hide sender, show sender in inbox | false | false | true | false |
 
 “Destructive” includes overwriting labels/tags/notes, spending money, canceling
 service, and sending an SMS that cannot be recalled. Account reads and read-status
@@ -133,7 +155,8 @@ selects the patched Node binary too. Installing a new npm package does not
 replace Node itself. The Docker build uses `node:22.23.5-slim` in both stages;
 rebuild and replace existing containers to use the patched runtime.
 
-The API key, executable names, and all 12 tools are unchanged.
+That security update preserved the API key, executable names, and the 12 tools
+available in 2.0.5. Version 2.1.0 adds the three sender tools described above.
 
 ## Upgrading from 1.x
 

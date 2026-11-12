@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { JoltSMSClient } from '../client.js';
 
 export const waitForSmsSchema = {
+  visibility: z.enum(['all', 'inbox', 'hidden']).optional().describe('Personal visibility filter; defaults to all accessible messages.'),
   number_id: z.string()
     .describe('Number ID (UUID) or phone number (e.g. +17245550100 or 7245550100)'),
   timeout_seconds: z.number().min(10).max(300).default(120).optional()
@@ -14,7 +15,7 @@ export const waitForSmsSchema = {
 
 export async function waitForSms(
   client: JoltSMSClient,
-  params: {
+  params: { visibility?: 'all' | 'inbox' | 'hidden';
     number_id: string;
     timeout_seconds?: number;
     poll_interval_seconds?: number;
@@ -33,6 +34,7 @@ export async function waitForSms(
     polls++;
 
     const result = await client.listMessages({
+      visibility: params.visibility,
       numberId,
       since,
       limit: 1,

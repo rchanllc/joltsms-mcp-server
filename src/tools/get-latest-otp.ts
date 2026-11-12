@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { JoltSMSClient } from '../client.js';
 
 export const getLatestOtpSchema = {
+  visibility: z.enum(['all', 'inbox', 'hidden']).optional().describe('Personal visibility filter; defaults to all accessible messages.'),
   number_id: z.string()
     .describe('Number ID (UUID) or phone number (e.g. +17245550100 or 7245550100)'),
   since: z.string().optional()
@@ -10,13 +11,14 @@ export const getLatestOtpSchema = {
 
 export async function getLatestOtp(
   client: JoltSMSClient,
-  params: { number_id: string; since?: string }
+  params: { visibility?: 'all' | 'inbox' | 'hidden'; number_id: string; since?: string }
 ) {
   const numberId = await client.resolveNumberId(params.number_id);
   // Default: look back 10 minutes
   const since = params.since ?? new Date(Date.now() - 10 * 60 * 1000).toISOString();
 
   const result = await client.listMessages({
+    visibility: params.visibility,
     numberId,
     since,
     limit: 10,

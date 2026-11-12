@@ -18,6 +18,8 @@ registry, developer docs, and release verification alongside those destinations:
 - [ ] **npm:** run the package checks below, publish the approved version of
   `@joltsms/mcp-server`, and verify the version and integrity from npm. For changes
   that do not affect the package, explicitly record why no new npm release is needed.
+  Before publishing 2.1.0, deploy and verify the production API's sender-preference
+  endpoints and visibility filters; publishing this package does not deploy them.
 - [ ] **Official MCP Registry:** publish the matching `server.json` after npm is
   available, then verify the active/latest registry version and npm reference.
 - [ ] **Developer docs:** check [joltsms.com/developers/mcp](https://joltsms.com/developers/mcp)
@@ -78,7 +80,7 @@ and npm audit contact the npm registry.
 
 `bundleDependencies` carries the reviewed SDK/Zod runtime tree from the lockfile
 into the tarball. The install test checks every bundled runtime version, both
-CLI names, all 12 tools and their titles and four annotation hints, validation,
+CLI names, all 15 tools and their titles and four annotation hints, validation,
 and masked payment methods. Dev tools are
 excluded. Keep the root audit clean before packing; bundled dependencies require
 a new package release to update them. Root-only npm overrides would not protect
@@ -137,7 +139,7 @@ For each listing:
 - Check the npm package name, supported Node version, install configuration,
   required `JOLTSMS_API_KEY`, tool list, and links against the released README.
   Version 2 uses `@joltsms/mcp-server@2`, the patched Node releases above, and
-  12 tools. Do not copy the incorrect `@modelcontextprotocol/server-joltsms` name
+  15 tools as of 2.1.0. Do not copy the incorrect `@modelcontextprotocol/server-joltsms` name
   found on AgentSift.
 - Preserve product limits in descriptions: next-available numbers, one number per
   MCP provisioning call, and replies to eligible existing inbound messages.

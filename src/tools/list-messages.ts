@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { JoltSMSClient } from '../client.js';
 
 export const listMessagesSchema = {
+  visibility: z.enum(['all', 'inbox', 'hidden']).optional().describe('Personal visibility filter; defaults to all accessible messages.'),
   number_id: z.string().optional()
     .describe('Filter by number ID (UUID) or phone number (e.g. +17245550100 or 7245550100). Omit for all numbers.'),
   since: z.string().optional()
@@ -16,12 +17,13 @@ export const listMessagesSchema = {
 
 export async function listMessages(
   client: JoltSMSClient,
-  params: { number_id?: string; since?: string; limit?: number; cursor?: string; from_filter?: string }
+  params: { visibility?: 'all' | 'inbox' | 'hidden'; number_id?: string; since?: string; limit?: number; cursor?: string; from_filter?: string }
 ) {
   const numberId = params.number_id
     ? await client.resolveNumberId(params.number_id)
     : undefined;
   const result = await client.listMessages({
+    visibility: params.visibility,
     numberId,
     since: params.since,
     limit: params.limit ?? 10,

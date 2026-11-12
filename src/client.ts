@@ -120,6 +120,7 @@ export class JoltSMSClient {
     limit?: number;
     cursor?: string;
     from?: string;
+    visibility?: 'all' | 'inbox' | 'hidden';
   } = {}): Promise<ListResponse<JoltMessage>> {
     const params: Record<string, string> = {
       limit: String(options.limit ?? 10),
@@ -128,8 +129,20 @@ export class JoltSMSClient {
     if (options.since) params.since = options.since;
     if (options.cursor) params.cursor = options.cursor;
     if (options.from) params.from = options.from;
+    if (options.visibility) params.visibility = options.visibility;
 
     return this.request('GET', '/messages', { params });
+  }
+
+  async listHiddenSenders(numberId?: string, cursor?: string) {
+    const params: Record<string, string> = {};
+    if (numberId) params.numberId = numberId;
+    if (cursor) params.cursor = cursor;
+    return this.request('GET', '/messages/sender-preferences', { params });
+  }
+
+  async setSenderPreference(input: { numberId: string; sender: string; hidden: boolean; muted: boolean }) {
+    return this.request('PUT', '/messages/sender-preferences', { body: input });
   }
 
   async rentNumber(options: {
